@@ -1,0 +1,43 @@
+ CREATE TABLE `TestTwo` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        CONSTRAINT `PK_TestTwo` PRIMARY KEY (`id`)
+    )
+    ENGINE=InnoDB;
+
+
+    CREATE TABLE `TestFour` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        CONSTRAINT `PK_TestFour` PRIMARY KEY (`id`)
+    )
+    ENGINE=InnoDB;
+
+
+    CREATE TABLE `TestOne` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        `email` int NOT NULL,
+        `name` int NOT NULL,
+        `TestFour_id` INT NOT NULL,
+        CONSTRAINT `PK_TestOne` PRIMARY KEY (`id`),
+        CONSTRAINT `Unq_email` UNIQUE (`email`),
+        CONSTRAINT `FK_Relation_TestFour` FOREIGN KEY (`TestFour_id`) REFERENCES `TestFour`(`id`)
+    )
+    ENGINE=InnoDB;
+
+
+    CREATE TABLE `TestThree` (
+        `id` int NOT NULL AUTO_INCREMENT,
+        `TestOne_id` INT NOT NULL,
+        CONSTRAINT `PK_TestThree` PRIMARY KEY (`id`),
+        CONSTRAINT `FK_Relation_TestOne` FOREIGN KEY (`TestOne_id`) REFERENCES `TestOne`(`id`)
+    )
+    ENGINE=InnoDB;
+
+
+    CREATE TABLE `TestRelation` (
+        `TestOne_id` INT NOT NULL,
+        `TestTwo_id` INT NOT NULL,
+        CONSTRAINT `PK_TestRelation` PRIMARY KEY (`TestOne_id`, `TestTwo_id`),
+        CONSTRAINT `FK_Relation_TestOne` FOREIGN KEY (`TestOne_id`) REFERENCES `TestOne`(`id`),
+        CONSTRAINT `FK_Relation_TestTwo` FOREIGN KEY (`TestTwo_id`) REFERENCES `TestTwo`(`id`)
+    )
+    ENGINE=InnoDB;

@@ -1,0 +1,67 @@
+#------------------------------------------------------------
+#        Script MySQL.
+#------------------------------------------------------------
+
+
+#------------------------------------------------------------
+# Table: test2
+#------------------------------------------------------------
+
+CREATE TABLE test2(
+        id Int  Auto_increment  NOT NULL
+	,CONSTRAINT test2_PK PRIMARY KEY (id)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: entite5
+#------------------------------------------------------------
+
+CREATE TABLE entite5(
+        id Int  Auto_increment  NOT NULL
+	,CONSTRAINT entite5_PK PRIMARY KEY (id)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: Test1
+#------------------------------------------------------------
+
+CREATE TABLE Test1(
+        id         Int  Auto_increment  NOT NULL ,
+        name       Varchar (50) NOT NULL ,
+        email      Varchar (50) NOT NULL ,
+        id_entite5 Int NOT NULL
+	,CONSTRAINT Test1_Idx INDEX (email)
+	,CONSTRAINT Test1_PK PRIMARY KEY (id)
+
+	,CONSTRAINT Test1_entite5_FK FOREIGN KEY (id_entite5) REFERENCES entite5(id)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: entite3
+#------------------------------------------------------------
+
+CREATE TABLE entite3(
+        id       Int  Auto_increment  NOT NULL ,
+        id_Test1 Int
+	,CONSTRAINT entite3_PK PRIMARY KEY (id)
+
+	,CONSTRAINT entite3_Test1_FK FOREIGN KEY (id_Test1) REFERENCES Test1(id)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: relation0
+#------------------------------------------------------------
+
+CREATE TABLE relation0(
+        id       Int NOT NULL ,
+        id_Test1 Int NOT NULL
+	,CONSTRAINT relation0_PK PRIMARY KEY (id,id_Test1)
+
+	,CONSTRAINT relation0_test2_FK FOREIGN KEY (id) REFERENCES test2(id)
+	,CONSTRAINT relation0_Test10_FK FOREIGN KEY (id_Test1) REFERENCES Test1(id)
+)ENGINE=InnoDB;
+
