@@ -1,4 +1,4 @@
-import {Group, Layer, Line, Rect, Stage, Text} from "react-konva";
+import {Group, Layer, Line, Rect, Stage, StageProps, Text} from "react-konva";
 import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
 import {CanvasGrid} from "@/components/canvas/CanvasGrid";
 import {Point, Size, Rectangle} from "@/components/canvas/canvas.type";
@@ -6,7 +6,7 @@ import {TableContext} from "@/contexts/table.context";
 import {CTable} from "@/components/canvas/table/CTable";
 import {GraphContext} from "@/contexts/graph.context";
 
-export const DBCanvas: React.FunctionComponent = () => {
+export const DBCanvas: React.FunctionComponent<Omit<StageProps, "width" | "height">> = (props) => {
 
   const tableCtx = useContext(TableContext);
   const graphCtx = useContext(GraphContext);
@@ -27,10 +27,9 @@ export const DBCanvas: React.FunctionComponent = () => {
         }
       },
     }
-  }, [window.innerWidth, window.innerHeight]);
+  }, []);
 
   useEffect(() => {
-    console.log('use effect graph updated when tables are added or removed');
     tableCtx.tables.forEach(t => graphCtx.addTable(t.uid, { x: spatial.center.x, y: spatial.center.y, width: 250, height: 20}))
   }, [tableCtx.tables]);
 
@@ -47,41 +46,16 @@ export const DBCanvas: React.FunctionComponent = () => {
 
             if (layoutA && layoutB) {
 
-              // Initialiser les coordonnées pour chaque table
-              let startPoints = { x: layoutA.rect.x + spatial.center.x + 250 / 2, y: layoutA.rect.y + spatial.center.y + 80 / 2 };
-              let endPoints = { x: layoutB.rect.x + spatial.center.x + 250 / 2, y: layoutB.rect.y + spatial.center.y + 80 / 2 };
-
-              // Si la table B est à gauche de la table A
-              if(layoutB.rect.x + layoutB.rect.width < layoutA.rect.x){
-                startPoints.x = layoutA.rect.x;
-                endPoints.x = layoutB.rect.x + layoutB.rect.width;
-              }
-              // Si la table B est à droite de la table A
-              else if(layoutB.rect.x > layoutA.rect.x + layoutA.rect.width){
-                startPoints.x = layoutA.rect.x + layoutA.rect.width;
-                endPoints.x = layoutB.rect.x;
-              }
-              // Si la table B est en haut de la table A
-              if(layoutB.rect.y + layoutB.rect.height < layoutA.rect.y){
-                startPoints.y = layoutA.rect.y;
-                endPoints.y = layoutB.rect.y + layoutB.rect.height;
-              }
-              // Si la table B est en bas de la table A
-              else if(layoutB.rect.y > layoutA.rect.y + layoutA.rect.height){
-                startPoints.y = layoutA.rect.y + layoutA.rect.height;
-                endPoints.y = layoutB.rect.y;
-              }
-
               // Calculate center points for layouts
               const linePoints = [
-                layoutA.rect.x + spatial.center.x + 250,
-                layoutA.rect.y + spatial.center.y,
-                layoutB.rect.x + spatial.center.x + 250,
-                layoutB.rect.y + spatial.center.y
+                layoutA.rect.x + spatial.center.x + 250 / 2,
+                layoutA.rect.y + spatial.center.y + 80 / 2,
+                layoutB.rect.x + spatial.center.x + 250 / 2,
+                layoutB.rect.y + spatial.center.y + 80 / 2
               ];
               _lines.push(<Line key={tableA.uid + '-' + tableB.uid}
-                                points={[startPoints.x, startPoints.y, endPoints.x, endPoints.y]}
-                                stroke="black"
+                                points={linePoints}
+                                stroke={tableB.color}
                                 strokeWidth={2} />);
             }
           }
@@ -93,7 +67,7 @@ export const DBCanvas: React.FunctionComponent = () => {
   }, [tableCtx.tables, graphCtx.tables]);
 
   return (
-    <Stage width={window.innerWidth} height={window.innerHeight} >
+    <Stage width={window.innerWidth} height={window.innerHeight} {...props} >
       <CanvasGrid />
       <Layer>
         {lines}

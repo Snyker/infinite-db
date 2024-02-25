@@ -49,7 +49,7 @@ import {FaInfo} from "react-icons/fa";
 
 const formSchema = z.object({
   uid: z.string().optional().default(randomUUID()),
-  name: z.string().regex(/^[a-zA-Z_]*$/, {
+  name: z.string().regex(/^[a-z_]*$/, {
     message: "Table name must be only characters"
   }).min(2, {
     message: "Table name must be at least 2 characters.",
@@ -81,7 +81,7 @@ const formSchema = z.object({
 
 const getDefaultValues = (): z.infer<typeof formSchema> => ({
   uid: randomUUID(),
-  name: "Entity",
+  name: "entity",
   key: "e",
   color: "#e8c77f",
   relations: [],
@@ -239,12 +239,13 @@ export const DialogDBTable = ({ value, children }: React.PropsWithChildren<{ val
                                <Input value={field.value} onChange={(e) => {
                                  field.onChange(e);
                                  if(autofill) {
-                                   form.setValue("key", e.target.value.charAt(0).toLowerCase() || 'e', {
+                                   const key = e.target.value.split("_").map(c => c.charAt(0)).join("");
+                                   form.setValue("key", key || 'e', {
                                      shouldDirty: true,
                                      shouldValidate: true
                                    })
                                  }
-                               }} placeholder={"Entity"} />
+                               }} placeholder={"my_entity_or_relation"} />
                              </FormControl>
                              <FormMessage />
                            </FormItem>
