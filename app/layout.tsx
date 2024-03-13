@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Script from "next/script";
 import MarkerComponent from "@/components/MarkerComponent";
+import {SpeedInsights} from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,11 +20,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-    <body className={inter.className}>
-      <MarkerComponent />
-      {children}
-    </body>
-
+      <body className={inter.className}>
+        <MarkerComponent />
+        {children}
+        <SpeedInsights />
+      </body>
     </html>
   );
 }
